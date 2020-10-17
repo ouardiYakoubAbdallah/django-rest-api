@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+from django.utils.translation import ugettext_lazy as _
+
 
 # Create your models here.
 class UserProfileManager(BaseUserManager):
@@ -9,7 +11,7 @@ class UserProfileManager(BaseUserManager):
         Helps Django to work with our custom user model.
     """
 
-    def create_user(self, email, name, password=None):
+    def create_user(self, email, first_name , last_name, password=None):
         """
             Creates a new user profile object
         """
@@ -17,18 +19,23 @@ class UserProfileManager(BaseUserManager):
             raise ValueError('Users must have an email adress.')
 
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name)
+        user = self.model(email=email, first_name=first_name, last_name=last_name)
 
         user.set_password(password)
         user.save(self._db)
 
         return user
 
-    def create_superuser(self, email, name, password):
+    def create_superuser(self, email, first_name , last_name, password):
         """
             Creates and saves a new superuser.
         """
-        user = self.create_user(email, name, password)
+        if not email:
+            raise ValueError('Users must have an email adress.')
+
+        email = self.normalize_email(email)
+        user = self.model(email=email, first_name=first_name, last_name=last_name)
+        user.set_password(password)
         user.is_superuser = True
         user.is_staff = True
 
@@ -40,8 +47,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     """
         Represents a user profile inside our system.
     """
-
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -50,7 +56,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def get_full_name(self):
         """
@@ -63,4 +69,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
             Used to get a users short name.
         """
         return self.first_name
+
+    def __str__(self):
+        return self.email
 
