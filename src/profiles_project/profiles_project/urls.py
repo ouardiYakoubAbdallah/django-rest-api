@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from profiles_api import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('first/', views.FirstView.as_view(), name='My first view')
 ]
