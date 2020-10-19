@@ -12,3 +12,5 @@ A sample backend REST API with Python &amp; django
   - Update name/email
   - Update password
 - Delete profile
+- Creating, updating, and deleting feed items (Logged-in users only)
+- Viewing other profile status updates
