@@ -49,6 +49,8 @@ class SecondView(viewsets.ViewSet):
         Basic ViewSset.
     """
 
+    serializer_class = serializers.FirstSerializer
+
     def list(self, request):
         first_viewset = [
             'First element',
@@ -60,3 +62,18 @@ class SecondView(viewsets.ViewSet):
             'message': 'Hello from Viewset',
             'data': first_viewset
         })
+
+    def create(self, request):
+        """
+            Create a new hello message.
+        """
+
+        ser = serializers.FirstSerializer(data=request)
+        if(ser.is_valid()):
+            name = ser.data.get('name')
+            msg = Hello dear {}.format(name)
+            return Response({
+                'message': msg
+            })
+        else:
+            return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
