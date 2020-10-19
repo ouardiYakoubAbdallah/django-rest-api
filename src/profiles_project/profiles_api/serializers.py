@@ -1,8 +1,18 @@
 from rest_framework import serializers
 
-class FirstSerializer(serializers.Serializer):
+from . import models
+
+class UserProfileSerializer(serializers.ModelSerializer):
     """
-        Serializes a name field.
+        A serializer for our UserProfile object.
     """
 
-    name = serializers.CharField(max_length=10)
+    class Meta:
+        model = models.UserProfile
+        fields = ('id', 'email', 'first_name', 'last_name', 'password')
+
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            }
+        }

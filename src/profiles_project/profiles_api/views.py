@@ -1,79 +1,17 @@
 from django.shortcuts import render
 
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 
 from . import serializers
+from . import models
 
 # Create your views here.
-
-class FirstView(APIView):
+class UserProfileViewSet(viewsets.ModelViewSet):
     """
-        Basic APIView.
-    """
-
-    serializer_class = serializers.FirstSerializer
-
-    def get(self, request, format=None):
-
-        first_apiview = [
-            'Django is a high-level Python Web framework',
-            'Django encourages rapid development and clean, pragmatic design.',
-            'Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel.',
-            'It’s free and open source.'
-        ]
-
-        return Response({
-            'message': 'Hello view!',
-            'view': first_apiview
-        })
-
-    def post(self, request):
-        """
-            Create a hello message with the name posted to the api.
-        """
-        ser = serializers.FirstSerializer(data=request.data)
-        if(ser.is_valid()):
-            name = ser.data.get('name')
-            msg = 'Hello {}!'.format(name)
-            return Response({
-                'message': msg
-            })
-        else:
-            return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class SecondView(viewsets.ViewSet):
-    """
-        Basic ViewSset.
+        Handles creating, reading and updating profiles.
     """
 
-    serializer_class = serializers.FirstSerializer
-
-    def list(self, request):
-        first_viewset = [
-            'First element',
-            'Second element',
-            'Third element'
-        ]
-
-        return Response({
-            'message': 'Hello from Viewset',
-            'data': first_viewset
-        })
-
-    def create(self, request):
-        """
-            Create a new hello message.
-        """
-
-        ser = serializers.FirstSerializer(data=request)
-        if(ser.is_valid()):
-            name = ser.data.get('name')
-            msg = Hello dear {}.format(name)
-            return Response({
-                'message': msg
-            })
-        else:
-            return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()

@@ -6,9 +6,9 @@ from rest_framework.routers import DefaultRouter
 from . import views 
 
 router = DefaultRouter()
-router.register('first-viewset', views.SecondView, basename='First Viewset')
+router.register('Profile', views.UserProfileViewSet)
 
 urlpatterns = [
-    path('first/', views.FirstView.as_view(), name='First APIView'),
+    #path('first/', views.FirstView.as_view(), name='First APIView'),
     path('', include(router.urls))
 ]
