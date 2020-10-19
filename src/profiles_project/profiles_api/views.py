@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets
 
 from . import serializers
 
@@ -17,7 +18,7 @@ class FirstView(APIView):
 
     def get(self, request, format=None):
 
-        django_apiview = [
+        first_apiview = [
             'Django is a high-level Python Web framework',
             'Django encourages rapid development and clean, pragmatic design.',
             'Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel.',
@@ -26,7 +27,7 @@ class FirstView(APIView):
 
         return Response({
             'message': 'Hello view!',
-            'view': django_apiview
+            'view': first_apiview
         })
 
     def post(self, request):
@@ -43,3 +44,19 @@ class FirstView(APIView):
         else:
             return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class SecondView(viewsets.ViewSet):
+    """
+        Basic ViewSset.
+    """
+
+    def list(self, request):
+        first_viewset = [
+            'First element',
+            'Second element',
+            'Third element'
+        ]
+
+        return Response({
+            'message': 'Hello from Viewset',
+            'data': first_viewset
+        })
